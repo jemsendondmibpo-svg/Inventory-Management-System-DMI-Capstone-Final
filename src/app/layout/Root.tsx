@@ -30,6 +30,16 @@ import { useTheme } from "next-themes";
 import { useAuth } from "../context/AuthContext";
 import { NotificationPanel } from "../components/NotificationPanel";
 import { RealtimeIndicator } from "../components/RealtimeIndicator";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../components/ui/alert-dialog";
 import { toast } from "sonner";
 import { canAccessModule } from "../lib/access";
 
@@ -41,6 +51,7 @@ export default function Root() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
   const profileButtonRef = useRef<HTMLButtonElement>(null);
   const profilePanelRef = useRef<HTMLDivElement>(null);
   const [profilePosition, setProfilePosition] = useState({ top: 0, right: 0 });
@@ -78,10 +89,17 @@ export default function Root() {
     };
   }, [isProfileOpen]);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     toast.success("Logged out successfully");
     navigate("/");
+  };
+
+  const confirmLogout = async () => {
+    setIsLogoutDialogOpen(false);
+    setIsProfileOpen(false);
+    setIsSidebarOpen(false);
+    await handleLogout();
   };
 
   const navigation = user
@@ -284,7 +302,7 @@ export default function Root() {
                 if (mobile) {
                   setIsSidebarOpen(false);
                 }
-                handleLogout();
+                setIsLogoutDialogOpen(true);
               }}
               className="flex items-center justify-center gap-2 rounded-xl bg-[#B0BF00] px-3 py-2 text-xs font-semibold text-[#1a1d27] transition-all duration-200 hover:bg-[#c3d200]"
             >
@@ -484,7 +502,7 @@ export default function Root() {
                   <button
                     onClick={() => {
                       setIsProfileOpen(false);
-                      handleLogout();
+                      setIsLogoutDialogOpen(true);
                     }}
                     className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 group dark:text-red-300 dark:hover:bg-red-950/40"
                   >
@@ -500,7 +518,7 @@ export default function Root() {
 
           {/* Quick Logout Button */}
           <button
-            onClick={handleLogout}
+            onClick={() => setIsLogoutDialogOpen(true)}
             className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 hover:scale-110 group dark:text-slate-100 dark:hover:bg-red-950/40"
             title="Logout"
           >
@@ -513,6 +531,26 @@ export default function Root() {
           <Outlet />
         </main>
       </div>
+
+      <AlertDialog open={isLogoutDialogOpen} onOpenChange={setIsLogoutDialogOpen}>
+        <AlertDialogContent className="sm:max-w-md rounded-2xl border border-slate-200 bg-white/95 shadow-[0_24px_60px_rgba(15,23,42,0.18)]">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Log out of the system?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You will be signed out and need to log in again to continue.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="rounded-xl">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmLogout}
+              className="rounded-xl bg-red-600 text-white hover:bg-red-700"
+            >
+              Log Out
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
