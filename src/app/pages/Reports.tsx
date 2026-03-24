@@ -566,9 +566,6 @@ export default function Reports() {
                 <h2 className="mt-3 text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
                   Reports & Analytics
                 </h2>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
-                  Review stock movement, asset value, and maintenance status in a cleaner reporting workspace.
-                </p>
               </div>
 
               <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">

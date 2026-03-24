@@ -251,9 +251,6 @@ export default function Dashboard() {
               <h2 className="mt-3 text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
                 Inventory and Assignment Snapshot
               </h2>
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                Monitor stock health, recent activity, and category performance from one cleaner and more presentable workspace.
-              </p>
             </div>
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">

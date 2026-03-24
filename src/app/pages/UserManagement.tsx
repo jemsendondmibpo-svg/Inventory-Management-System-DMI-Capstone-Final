@@ -457,9 +457,6 @@ export default function UserManagement() {
                 <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
                   User Management
                 </h1>
-                <p className="max-w-2xl text-sm leading-6 text-slate-500">
-                  Manage system users, assign roles, and control access with a cleaner administrative view.
-                </p>
               </div>
             </div>
             <Button

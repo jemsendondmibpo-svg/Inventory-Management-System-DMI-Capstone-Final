@@ -356,9 +356,6 @@ export default function SettingsPage() {
                 <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
                   System Settings
                 </h1>
-                <p className="max-w-2xl text-sm leading-6 text-slate-500">
-                  Manage your personal information, company profile, and notification preferences in one clean workspace.
-                </p>
               </div>
             </div>
 

@@ -435,9 +435,6 @@ export default function Inventory() {
               <h3 className="mt-3 text-xl font-bold tracking-tight text-slate-900 md:text-2xl">
                 Inventory Assets
               </h3>
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                Keep your asset records clean, searchable, and ready for assignment with a more organized inventory workspace.
-              </p>
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">

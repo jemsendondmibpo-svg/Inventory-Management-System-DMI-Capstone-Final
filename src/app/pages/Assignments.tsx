@@ -186,9 +186,6 @@ export default function Assignments() {
                 <h3 className="mt-3 text-xl font-bold tracking-tight text-slate-900 md:text-2xl">
                   Asset Assignments
                 </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
-                  Manage asset deployment records with a clearer workspace for tracking assignees, workstations, and assignment status.
-                </p>
               </div>
 
               <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
