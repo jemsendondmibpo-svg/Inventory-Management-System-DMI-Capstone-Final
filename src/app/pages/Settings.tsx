@@ -70,7 +70,7 @@ export default function SettingsPage() {
     industry: "Information Technology & Services",
     registrationNumber: "N/A",
     taxId: "N/A",
-    email: "info@digitalmindsbpo.com",
+    email: "N/A",
     phone: "N/A",
     website: "https://www.digitalmindsbpo.com",
     address: "Magsaysay Ave, Green Wood 3rd floor, Naga City",
