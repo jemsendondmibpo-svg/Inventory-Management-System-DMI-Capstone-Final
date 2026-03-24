@@ -54,6 +54,18 @@ const categoryIcons: Record<string, React.ElementType> = {
   Extra: Package,
 };
 
+type ActivityItem = {
+  id: string;
+  action: string;
+  description: string;
+  assignedTo: string;
+  timestamp: string;
+  icon: React.ElementType;
+  iconBg: string;
+  iconColor: string;
+  date: Date;
+};
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const { assignments, loading: assignmentsLoading } = useAssignments();
@@ -162,7 +174,7 @@ export default function Dashboard() {
   const alerts = inventory.filter((i) => i.stockStatus !== "In Stock");
 
   const recentActivity = (() => {
-    const activities = [];
+    const activities: ActivityItem[] = [];
 
     const recentAssignments = [...assignments]
       .sort((a, b) => new Date(b.dateAssigned || 0).getTime() - new Date(a.dateAssigned || 0).getTime())
