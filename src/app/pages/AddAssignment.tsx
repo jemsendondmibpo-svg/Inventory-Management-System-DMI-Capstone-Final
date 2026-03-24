@@ -32,6 +32,18 @@ const FLOOR_MAPPING: Record<string, string> = {
   "HR Department": "3rd Floor",
 };
 
+type AssignmentStatus = "Assigned" | "Available" | "Under Maintenance";
+
+type FormData = {
+  assetId: string;
+  assignedTo: string;
+  workstation: string;
+  seatNumber: string;
+  floor: string;
+  status: AssignmentStatus;
+  dateAssigned: string;
+};
+
 const SEAT_NUMBERS: Record<string, number[]> = {
   "PROD 1": [53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86],
   "PROD 2": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 88, 89, 90, 91, 92, 93],
@@ -56,7 +68,7 @@ export default function AddAssignment() {
     return null;
   });
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     assetId: existing ? String(inventory.find((a) => a.sku === existing.assetSKU)?.id ?? "") : "",
     assignedTo: existing?.assignedTo === "Unassigned" ? "" : (existing?.assignedTo ?? ""),
     workstation: existing?.workstation ?? "",
@@ -129,7 +141,7 @@ export default function AddAssignment() {
       workstation: formData.workstation,
       seatNumber: seatNum,
       floor: formData.floor,
-      status: formData.status as "Available" | "Assigned" | "Under Maintenance",
+      status: formData.status,
       dateAssigned: formData.dateAssigned,
     };
 
@@ -328,7 +340,7 @@ export default function AddAssignment() {
 
               <div className="space-y-1.5 rounded-3xl border border-slate-200 bg-slate-50/70 p-5">
                 <Label className="text-xs font-medium text-slate-600">Status</Label>
-                <Select value={formData.status} onValueChange={(v) => setFormData({ ...formData, status: v })}>
+                <Select value={formData.status} onValueChange={(v) => setFormData({ ...formData, status: v as AssignmentStatus })}>
                   <SelectTrigger className={selectClass}>
                     <SelectValue />
                   </SelectTrigger>
