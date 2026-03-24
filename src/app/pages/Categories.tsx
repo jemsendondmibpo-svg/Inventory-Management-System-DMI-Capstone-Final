@@ -85,11 +85,11 @@ export default function Categories() {
         acc[cat] = { inStock: 0, lowStock: 0, outOfStock: 0, totalValue: 0 };
       }
       
-      if (item.status === "In Stock") {
+      if (item.stockStatus === "In Stock") {
         acc[cat].inStock += item.quantity;
-      } else if (item.status === "Low Stock") {
+      } else if (item.stockStatus === "Low Stock") {
         acc[cat].lowStock += item.quantity;
-      } else if (item.status === "Out of Stock") {
+      } else if (item.stockStatus === "Out of Stock") {
         acc[cat].outOfStock += item.quantity;
       }
       
