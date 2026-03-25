@@ -129,12 +129,12 @@ export default function Login() {
     {
       value: "IT Officers",
       icon: UserCog,
-      description: "IT Department inventory management"
+      description: "IT Department"
     },
     {
       value: "HR Officers",
       icon: Briefcase,
-      description: "HR Department inventory management"
+      description: "HR Department"
     }
   ];
 
