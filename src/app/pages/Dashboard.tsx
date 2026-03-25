@@ -90,32 +90,34 @@ export default function Dashboard() {
   const totalValue = inventory.reduce((s, i) => s + i.price * i.quantity, 0);
 
   const monthlyData = (() => {
-    const months = ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar"];
     const now = new Date();
-    const monthCounts: Record<string, number> = {};
-
-    months.forEach((m) => {
-      monthCounts[m] = 0;
+    const buckets = Array.from({ length: 6 }, (_, index) => {
+      const date = new Date(now.getFullYear(), now.getMonth() - (5 - index), 1);
+      return {
+        key: `${date.getFullYear()}-${date.getMonth()}`,
+        month: date.toLocaleString("en-US", { month: "short" }),
+        items: 0,
+      };
     });
 
     inventory.forEach((item) => {
-      if (item.purchaseDate) {
-        const purchaseDate = new Date(item.purchaseDate);
-        const monthDiff =
-          (now.getFullYear() - purchaseDate.getFullYear()) * 12 +
-          (now.getMonth() - purchaseDate.getMonth());
+      const recordDate = new Date(item.createdAt || item.purchaseDate);
+      if (Number.isNaN(recordDate.getTime())) return;
 
-        if (monthDiff >= 0 && monthDiff < 6) {
-          const monthName = months[5 - monthDiff];
-          if (monthName) {
-            monthCounts[monthName] += item.quantity;
-          }
-        }
+      const bucket = buckets.find(
+        (entry) =>
+          entry.key === `${recordDate.getFullYear()}-${recordDate.getMonth()}`
+      );
+
+      if (bucket) {
+        bucket.items += item.quantity;
       }
     });
 
-    return months.map((month) => ({ month, items: monthCounts[month] || 0 }));
+    return buckets.map(({ month, items }) => ({ month, items }));
   })();
+  const monthlyTrendMax = Math.max(...monthlyData.map((point) => point.items), 0);
+  const monthlyTrendDomainMax = Math.max(10, Math.ceil(monthlyTrendMax / 10) * 10);
 
   const statCards = [
     {
@@ -383,7 +385,7 @@ export default function Dashboard() {
             <div className="flex items-center justify-between gap-3">
               <div>
                 <h3 className="text-lg font-semibold text-slate-900">Inventory Trend</h3>
-                <p className="mt-1 text-sm text-slate-500">Monthly quantity movement based on recorded purchase dates.</p>
+                <p className="mt-1 text-sm text-slate-500">Monthly quantity movement based on actual inventory record dates.</p>
               </div>
               <div className="rounded-2xl bg-slate-100 p-3 text-slate-500">
                 <Activity className="h-5 w-5" />
@@ -394,7 +396,13 @@ export default function Dashboard() {
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={monthlyData} barSize={28}>
                 <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#94a3b8" }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#94a3b8" }} domain={[0, 80]} />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 11, fill: "#94a3b8" }}
+                  domain={[0, monthlyTrendDomainMax]}
+                  allowDecimals={false}
+                />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "#fff",

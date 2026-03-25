@@ -18,6 +18,7 @@ export interface InventoryAsset {
   serialNumber: string;
   condition: string;
   purchaseDate: string;
+  createdAt?: string;
   location: string;
   locationCode: string;
 }
@@ -103,6 +104,7 @@ export function InventoryProvider({ children }: { children: ReactNode }) {
             serialNumber: item.serial_number || '',
             condition: item.condition || '',
             purchaseDate: item.purchase_date || '',
+            createdAt: item.created_at || '',
             location: item.location || '',
             locationCode: item.location_code || '',
           };
