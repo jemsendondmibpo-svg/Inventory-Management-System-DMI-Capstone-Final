@@ -4,7 +4,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, Legend,
 } from "recharts";
 import { useTheme } from "next-themes";
-import { Download, TrendingUp, TrendingDown, Package, AlertTriangle, CheckCircle, Clock, Printer, FileText, File, LayoutDashboard } from "lucide-react";
+import { Download, Package, AlertTriangle, CheckCircle, Clock, Printer, FileText, File, LayoutDashboard } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "../context/AuthContext";
 import { useInventory } from "../context/InventoryContext";
@@ -297,50 +297,6 @@ export default function Reports() {
   const totalOutOfStock = reportInventory.filter(i => i.stockStatus === "Out of Stock").reduce((sum, item) => sum + item.quantity, 0);
   const totalUnderMaintenance = assignments.filter(a => a.status === "Under Maintenance").length;
   const totalInventoryValue = inventory.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-  // Summary stats with real data
-  const summaryStats = [
-    {
-      label: "Total Assets",
-      value: totalAssets.toString(),
-      sub: "Across all types",
-      icon: Package,
-      iconBg: "bg-blue-50",
-      iconColor: "text-blue-500",
-      trend: `${reportInventory.length} unique items`,
-      up: true,
-    },
-    {
-      label: "In Stock",
-      value: totalInStock.toString(),
-      sub: `${totalAssets > 0 ? Math.round((totalInStock / totalAssets) * 100) : 0}% of total`,
-      icon: CheckCircle,
-      iconBg: "bg-green-50",
-      iconColor: "text-green-500",
-      trend: "Well stocked",
-      up: true,
-    },
-    {
-      label: "Low / Out of Stock",
-      value: (totalLowStock + totalOutOfStock).toString(),
-      sub: "Needs attention",
-      icon: AlertTriangle,
-      iconBg: "bg-amber-50",
-      iconColor: "text-amber-500",
-      trend: `${totalOutOfStock} out of stock`,
-      up: false,
-    },
-    {
-      label: "Under Maintenance",
-      value: totalUnderMaintenance.toString(),
-      sub: "Being serviced",
-      icon: Clock,
-      iconBg: "bg-purple-50",
-      iconColor: "text-purple-500",
-      trend: "Active maintenance",
-      up: true,
-    },
-  ];
 
   const reportSummaryCards = [
     {
@@ -995,32 +951,6 @@ export default function Reports() {
           })}
         </div>
 
-        {/* Summary Stats */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {summaryStats.map((stat, i) => {
-            const Icon = stat.icon;
-            return (
-              <div key={i} className={CARD}>
-                <div className="p-5">
-                  <div className="flex items-start gap-3">
-                    <div className={`${stat.iconBg} ${stat.iconColor} flex-shrink-0 rounded-2xl p-2.5`}>
-                      <Icon className="h-4 w-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-500">{stat.label}</p>
-                      <p className="mt-1 text-2xl font-semibold text-slate-900">{stat.value}</p>
-                      <p className="mt-0.5 text-[11px] text-slate-500">{stat.sub}</p>
-                    </div>
-                  </div>
-                  <div className={`mt-4 inline-flex items-center gap-1 rounded-full px-3 py-1 text-[10px] font-semibold ${stat.up ? "bg-green-50 text-green-600" : "bg-orange-50 text-orange-500"}`}>
-                    {stat.up ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-                    {stat.trend}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
         {/* Charts Row 1 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {/* Stock by Category */}
