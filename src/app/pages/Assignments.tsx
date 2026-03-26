@@ -140,7 +140,7 @@ export default function Assignments() {
           return (
             <div
               key={card.label}
-              className={`overflow-hidden rounded-3xl border border-white/70 bg-gradient-to-br ${card.accent} p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)]`}
+              className={`overflow-hidden rounded-3xl border p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] ${isDark ? "border-slate-700 bg-slate-900" : "border-slate-200 bg-white"}`}
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -151,7 +151,7 @@ export default function Assignments() {
                     {card.value}
                   </p>
                 </div>
-                <div className={`rounded-2xl p-3 shadow-sm ${isDark ? "bg-slate-900/80" : "bg-white/90"}`}>
+                <div className={`rounded-2xl border p-3 shadow-sm ${isDark ? "border-slate-700 bg-slate-800" : "border-slate-200 bg-slate-50"}`}>
                   <Icon className={`h-5 w-5 ${card.iconClass}`} />
                 </div>
               </div>
@@ -161,7 +161,7 @@ export default function Assignments() {
         })}
       </div>
 
-      <div className="inline-flex w-full items-center gap-1 overflow-x-auto rounded-2xl border border-slate-200 bg-white/90 p-1 shadow-sm sm:w-fit">
+      <div className={`inline-flex w-full items-center gap-1 overflow-x-auto rounded-2xl border p-1 shadow-sm sm:w-fit ${isDark ? "border-slate-700 bg-slate-900" : "border-slate-200 bg-white"}`}>
         <button
           onClick={() => setActiveTab("list")}
           className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors whitespace-nowrap ${
@@ -185,11 +185,11 @@ export default function Assignments() {
       </div>
 
       {activeTab === "list" && (
-        <div className="overflow-hidden rounded-[28px] border border-[#B0BF00]/15 bg-white/90 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl transition-all duration-300 hover:shadow-[0_26px_70px_rgba(15,23,42,0.12)]">
-          <div className="border-b border-slate-100 bg-gradient-to-r from-[#f7fad8] via-white to-[#eef3c2] px-4 py-5 md:px-6 md:py-6">
+        <div className={`overflow-hidden rounded-[28px] border shadow-[0_24px_60px_rgba(15,23,42,0.08)] transition-all duration-300 hover:shadow-[0_26px_70px_rgba(15,23,42,0.12)] ${isDark ? "border-slate-700 bg-slate-900" : "border-[#B0BF00]/15 bg-white"}`}>
+          <div className={`border-b px-4 py-5 md:px-6 md:py-6 ${isDark ? "border-slate-700 bg-slate-900" : "border-slate-200 bg-white"}`}>
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-2xl">
-                <div className="inline-flex items-center gap-2 rounded-full border border-[#B0BF00]/20 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7f8f00]">
+                <div className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] ${isDark ? "border-slate-700 bg-slate-800 text-[#d8e56b]" : "border-[#B0BF00]/20 bg-slate-50 text-[#7f8f00]"}`}>
                   <ClipboardList className="h-3.5 w-3.5" />
                   Assignments Module
                 </div>
@@ -237,7 +237,7 @@ export default function Assignments() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-100">
+                <tr className={`${isDark ? "border-slate-700 bg-slate-900" : "border-gray-200 bg-slate-50"} border-b`}>
                   {["ID", "Asset", "Assigned To", "Department", "Workstation / Seat", "Floor", "Status", "Actions"].map(
                     (h, i) => (
                       <th
@@ -252,7 +252,7 @@ export default function Assignments() {
                   )}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className={`divide-y ${isDark ? "divide-slate-700" : "divide-gray-100"}`}>
                 {paginated.length === 0 ? (
                   <tr>
                     <td colSpan={8} className="py-12 text-center text-sm text-gray-400 italic">
@@ -261,7 +261,7 @@ export default function Assignments() {
                   </tr>
                 ) : (
                   paginated.map((assignment) => (
-                    <tr key={assignment.assignmentId} className="hover:bg-gray-50/70 transition-colors">
+                    <tr key={assignment.assignmentId} className={`transition-colors ${isDark ? "hover:bg-slate-800" : "hover:bg-slate-50"}`}>
                       <td className="px-5 py-3.5">
                         <span className="text-xs font-mono text-gray-400">{assignment.assignmentId}</span>
                       </td>
@@ -338,7 +338,7 @@ export default function Assignments() {
             </table>
           </div>
 
-          <div className="flex items-center justify-between border-t border-gray-100 px-6 py-3">
+          <div className={`flex items-center justify-between border-t px-6 py-3 ${isDark ? "border-slate-700 bg-slate-900" : "border-gray-200 bg-white"}`}>
             <p className="text-xs font-medium text-[#B0BF00]">
               Showing {paginated.length} of {filtered.length} assignments
             </p>
@@ -366,10 +366,10 @@ export default function Assignments() {
       )}
 
       {activeTab === "map" && (
-        <div className="overflow-hidden rounded-[28px] border border-[#B0BF00]/15 bg-white/90 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl transition-all duration-300 hover:shadow-[0_26px_70px_rgba(15,23,42,0.12)]">
-          <div className="flex flex-col gap-4 border-b border-slate-100 bg-gradient-to-r from-[#f7fad8] via-white to-[#eef3c2] px-6 py-6 sm:flex-row sm:items-end sm:justify-between">
+        <div className={`overflow-hidden rounded-[28px] border shadow-[0_24px_60px_rgba(15,23,42,0.08)] transition-all duration-300 hover:shadow-[0_26px_70px_rgba(15,23,42,0.12)] ${isDark ? "border-slate-700 bg-slate-900" : "border-[#B0BF00]/15 bg-white"}`}>
+          <div className={`flex flex-col gap-4 border-b px-6 py-6 sm:flex-row sm:items-end sm:justify-between ${isDark ? "border-slate-700 bg-slate-900" : "border-slate-200 bg-white"}`}>
             <div className="flex-1">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#B0BF00]/20 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7f8f00]">
+              <div className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] ${isDark ? "border-slate-700 bg-slate-800 text-[#d8e56b]" : "border-[#B0BF00]/20 bg-slate-50 text-[#7f8f00]"}`}>
                 <MapPinned className="h-3.5 w-3.5" />
                 Assignment Map
               </div>

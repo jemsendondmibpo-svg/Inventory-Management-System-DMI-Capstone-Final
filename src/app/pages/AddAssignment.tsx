@@ -190,9 +190,9 @@ export default function AddAssignment() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="overflow-hidden rounded-[28px] border border-[#B0BF00]/15 bg-white/90 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl transition-all duration-300 hover:shadow-[0_26px_70px_rgba(15,23,42,0.12)]">
-          <div className="border-b border-slate-100 bg-gradient-to-r from-[#f7fad8] via-white to-[#eef3c2] px-6 py-5">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#B0BF00]/20 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7f8f00]">
+        <div className="overflow-hidden rounded-[28px] border border-[#B0BF00]/15 bg-white shadow-[0_24px_60px_rgba(15,23,42,0.08)] transition-all duration-300 hover:shadow-[0_26px_70px_rgba(15,23,42,0.12)]">
+          <div className="border-b border-slate-200 bg-white px-6 py-5">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#B0BF00]/20 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7f8f00]">
               <ClipboardCheck className="h-3.5 w-3.5" />
               Step 1
             </div>
@@ -236,7 +236,7 @@ export default function AddAssignment() {
                     { label: "Department (from Inventory)", value: selectedAsset.location },
                     { label: "Unit Price", value: `PHP ${selectedAsset.price.toLocaleString()}` },
                   ].map((f) => (
-                    <div key={f.label} className="rounded-2xl bg-white/80 p-3 shadow-sm">
+                    <div key={f.label} className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
                       <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-sky-600">{f.label}</p>
                       <p className={`text-sm text-sky-950 ${f.mono ? "font-mono" : ""} ${f.label.includes("Department") ? "font-semibold" : ""}`}>
                         {f.value}
@@ -250,9 +250,9 @@ export default function AddAssignment() {
         </div>
 
         {selectedAsset && (
-          <div className="overflow-hidden rounded-[28px] border border-[#B0BF00]/15 bg-white/90 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl transition-all duration-300 hover:shadow-[0_26px_70px_rgba(15,23,42,0.12)]">
-            <div className="border-b border-slate-100 bg-gradient-to-r from-[#f7fad8] via-white to-[#eef3c2] px-6 py-5">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#B0BF00]/20 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7f8f00]">
+          <div className="overflow-hidden rounded-[28px] border border-[#B0BF00]/15 bg-white shadow-[0_24px_60px_rgba(15,23,42,0.08)] transition-all duration-300 hover:shadow-[0_26px_70px_rgba(15,23,42,0.12)]">
+            <div className="border-b border-slate-200 bg-white px-6 py-5">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#B0BF00]/20 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7f8f00]">
                 <Building2 className="h-3.5 w-3.5" />
                 Step 2
               </div>

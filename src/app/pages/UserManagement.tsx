@@ -403,24 +403,24 @@ export default function UserManagement() {
   const fieldClass =
     "h-11 rounded-xl border border-slate-200 bg-white text-sm shadow-sm transition focus:border-[#B0BF00] focus:ring-4 focus:ring-[#B0BF00]/10";
   const sectionCardClass =
-    "overflow-hidden rounded-[28px] border border-[#B0BF00]/15 bg-white/90 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl transition-all duration-300 hover:shadow-[0_26px_70px_rgba(15,23,42,0.12)]";
+    "overflow-hidden rounded-[28px] border border-[#B0BF00]/15 bg-white shadow-[0_24px_60px_rgba(15,23,42,0.08)] transition-all duration-300 hover:shadow-[0_26px_70px_rgba(15,23,42,0.12)]";
   const labelChipClass =
-    "inline-flex items-center gap-2 rounded-full border border-[#B0BF00]/20 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7f8f00]";
+    "inline-flex items-center gap-2 rounded-full border border-[#B0BF00]/20 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7f8f00]";
   const headerSurfaceClass = isDark
-    ? "border-b border-[#314865] bg-gradient-to-r from-[#0d1a2b] via-[#132338] to-[#0d1a2b]"
-    : "border-b border-slate-100 bg-gradient-to-r from-[#f7fad8] via-white to-[#eef3c2]";
+    ? "border-b border-[#314865] bg-[#0d1a2b]"
+    : "border-b border-slate-200 bg-white";
   const statCardClass = isDark
     ? "overflow-hidden rounded-[24px] border border-[#314865] bg-[#0d1a2b] p-5 shadow-[0_16px_40px_rgba(2,8,23,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_48px_rgba(2,8,23,0.45)]"
-    : "overflow-hidden rounded-[24px] border border-[#B0BF00]/15 bg-white/90 p-5 shadow-[0_16px_40px_rgba(15,23,42,0.07)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_48px_rgba(15,23,42,0.12)]";
+    : "overflow-hidden rounded-[24px] border border-[#B0BF00]/15 bg-white p-5 shadow-[0_16px_40px_rgba(15,23,42,0.07)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_48px_rgba(15,23,42,0.12)]";
   const panelClass = isDark
-    ? "overflow-hidden rounded-[28px] border border-[#314865] bg-[#0d1a2b] shadow-[0_24px_60px_rgba(2,8,23,0.45)] backdrop-blur-xl transition-all duration-300 hover:shadow-[0_26px_70px_rgba(2,8,23,0.52)]"
+    ? "overflow-hidden rounded-[28px] border border-[#314865] bg-[#0d1a2b] shadow-[0_24px_60px_rgba(2,8,23,0.45)] transition-all duration-300 hover:shadow-[0_26px_70px_rgba(2,8,23,0.52)]"
     : sectionCardClass;
   const tableHeadClass = isDark
     ? "border-b border-[#314865] bg-[#132338]"
-    : "border-b border-slate-200 bg-gradient-to-r from-slate-50 to-slate-100/70";
+    : "border-b border-slate-200 bg-slate-50";
   const rowClass = isDark
     ? "group transition-all duration-200 hover:bg-[#132338]"
-    : "group transition-all duration-200 hover:bg-slate-50/70";
+    : "group transition-all duration-200 hover:bg-slate-50";
 
   if (loading) {
     return (
@@ -698,7 +698,7 @@ export default function UserManagement() {
         </div>
 
         {/* Pagination */}
-        <div className="flex flex-col gap-3 border-t border-slate-200 bg-slate-50/70 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 border-t border-slate-200 bg-white px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs font-semibold text-slate-600">
             Showing <span className="text-[#7f8f00]">{paginated.length}</span> of <span className="text-[#7f8f00]">{filtered.length}</span> users
           </p>

@@ -285,11 +285,11 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-5 md:space-y-6">
-      <div className="overflow-hidden rounded-[28px] border border-[#B0BF00]/15 bg-white/90 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl">
-        <div className="bg-gradient-to-r from-[#f7fad8] via-white to-[#eef3c2] px-5 py-6 md:px-6 md:py-7">
+      <div className={`overflow-hidden rounded-[28px] border shadow-[0_24px_60px_rgba(15,23,42,0.08)] ${isDark ? "border-slate-700 bg-slate-900" : "border-[#B0BF00]/15 bg-white"}`}>
+        <div className={`px-5 py-6 md:px-6 md:py-7 ${isDark ? "bg-slate-900" : "bg-white"}`}>
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#B0BF00]/20 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7f8f00]">
+              <div className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] ${isDark ? "border-slate-700 bg-slate-800 text-[#d8e56b]" : "border-[#B0BF00]/20 bg-slate-50 text-[#7f8f00]"}`}>
                 <LayoutDashboard className="h-3.5 w-3.5" />
                 Dashboard Overview
               </div>
@@ -316,19 +316,19 @@ export default function Dashboard() {
             </div>
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <div className={`rounded-2xl border px-4 py-3 shadow-sm ${isDark ? "border-slate-700/70 bg-slate-900/75" : "border-white/70 bg-white/85"}`}>
+              <div className={`rounded-2xl border px-4 py-3 shadow-sm ${isDark ? "border-slate-700 bg-slate-800" : "border-slate-200 bg-white"}`}>
                 <p className={`text-[11px] font-semibold uppercase tracking-[0.18em] ${isDark ? "text-slate-400" : "text-slate-500"}`}>Units</p>
                 <p className={`mt-2 text-xl font-bold ${isDark ? "text-slate-100" : "text-slate-900"}`}>{totalAssets}</p>
               </div>
-              <div className={`rounded-2xl border px-4 py-3 shadow-sm ${isDark ? "border-slate-700/70 bg-slate-900/75" : "border-white/70 bg-white/85"}`}>
+              <div className={`rounded-2xl border px-4 py-3 shadow-sm ${isDark ? "border-slate-700 bg-slate-800" : "border-slate-200 bg-white"}`}>
                 <p className={`text-[11px] font-semibold uppercase tracking-[0.18em] ${isDark ? "text-slate-400" : "text-slate-500"}`}>In Stock</p>
                 <p className="mt-2 text-xl font-bold text-emerald-600">{inStock}</p>
               </div>
-              <div className={`rounded-2xl border px-4 py-3 shadow-sm ${isDark ? "border-slate-700/70 bg-slate-900/75" : "border-white/70 bg-white/85"}`}>
+              <div className={`rounded-2xl border px-4 py-3 shadow-sm ${isDark ? "border-slate-700 bg-slate-800" : "border-slate-200 bg-white"}`}>
                 <p className={`text-[11px] font-semibold uppercase tracking-[0.18em] ${isDark ? "text-slate-400" : "text-slate-500"}`}>Assignments</p>
                 <p className="mt-2 text-xl font-bold text-sky-600">{assignments.length}</p>
               </div>
-              <div className={`rounded-2xl border px-4 py-3 shadow-sm ${isDark ? "border-slate-700/70 bg-slate-900/75" : "border-white/70 bg-white/85"}`}>
+              <div className={`rounded-2xl border px-4 py-3 shadow-sm ${isDark ? "border-slate-700 bg-slate-800" : "border-slate-200 bg-white"}`}>
                 <p className={`text-[11px] font-semibold uppercase tracking-[0.18em] ${isDark ? "text-slate-400" : "text-slate-500"}`}>Alerts</p>
                 <p className="mt-2 text-xl font-bold text-amber-600">{alerts.length}</p>
               </div>
@@ -344,7 +344,7 @@ export default function Dashboard() {
           return (
             <div
               key={card.label}
-              className={`overflow-hidden rounded-3xl border border-white/70 bg-gradient-to-br ${card.accent} p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)]`}
+              className={`overflow-hidden rounded-3xl border p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] ${isDark ? "border-slate-700 bg-slate-900" : "border-slate-200 bg-white"}`}
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -355,13 +355,13 @@ export default function Dashboard() {
                     {card.value}
                   </p>
                 </div>
-                <div className={`rounded-2xl p-3 shadow-sm ${isDark ? "bg-slate-900/80" : "bg-white/90"}`}>
+                <div className={`rounded-2xl border p-3 shadow-sm ${isDark ? "border-slate-700 bg-slate-800" : "border-slate-200 bg-slate-50"}`}>
                   <Icon className={`h-5 w-5 ${card.iconClass}`} />
                 </div>
               </div>
               <p className="mt-4 text-sm leading-6 text-slate-600">{card.description}</p>
               {card.badge && (
-                <span className={`mt-4 inline-flex rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] ${isDark ? "border-slate-700 bg-slate-900/80 text-slate-300" : "border-white/80 bg-white/80 text-slate-600"}`}>
+                <span className={`mt-4 inline-flex rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] ${isDark ? "border-slate-700 bg-slate-800 text-slate-300" : "border-slate-200 bg-slate-50 text-slate-600"}`}>
                   {card.badge}
                 </span>
               )}
@@ -371,8 +371,8 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:gap-5 lg:grid-cols-2">
-        <div className="overflow-hidden rounded-[28px] border border-[#B0BF00]/15 bg-white/90 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl">
-          <div className="border-b border-slate-100 bg-gradient-to-r from-white to-slate-50 px-5 py-5 md:px-6">
+        <div className={`overflow-hidden rounded-[28px] border shadow-[0_24px_60px_rgba(15,23,42,0.08)] ${isDark ? "border-slate-700 bg-slate-900" : "border-[#B0BF00]/15 bg-white"}`}>
+          <div className={`border-b px-5 py-5 md:px-6 ${isDark ? "border-slate-700 bg-slate-900" : "border-slate-200 bg-white"}`}>
             <div className="flex items-center justify-between gap-3">
               <div>
                 <h3 className="text-lg font-semibold text-slate-900">Stock by Category</h3>
@@ -417,7 +417,7 @@ export default function Dashboard() {
               </div>
               <div className="grid w-full grid-cols-2 gap-x-4 gap-y-2 px-2">
                 {donutData.map((d, i) => (
-                  <div key={`legend-${d.name}-${i}`} className="flex items-center gap-2 rounded-xl bg-slate-50 px-3 py-2">
+                  <div key={`legend-${d.name}-${i}`} className={`flex items-center gap-2 rounded-xl px-3 py-2 ${isDark ? "bg-slate-800" : "bg-slate-50"}`}>
                     <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full" style={{ backgroundColor: d.color }} />
                     <span className="truncate text-[11px] text-slate-600">{d.name} ({d.value})</span>
                   </div>
@@ -427,8 +427,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-[28px] border border-[#B0BF00]/15 bg-white/90 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl">
-          <div className="border-b border-slate-100 bg-gradient-to-r from-white to-slate-50 px-5 py-5 md:px-6">
+        <div className={`overflow-hidden rounded-[28px] border shadow-[0_24px_60px_rgba(15,23,42,0.08)] ${isDark ? "border-slate-700 bg-slate-900" : "border-[#B0BF00]/15 bg-white"}`}>
+          <div className={`border-b px-5 py-5 md:px-6 ${isDark ? "border-slate-700 bg-slate-900" : "border-slate-200 bg-white"}`}>
             <div className="flex items-center justify-between gap-3">
               <div>
                 <h3 className="text-lg font-semibold text-slate-900">Inventory Trend</h3>
@@ -467,8 +467,8 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:gap-5 lg:grid-cols-2">
-        <div className="overflow-hidden rounded-[28px] border border-[#B0BF00]/15 bg-white/90 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl">
-          <div className="border-b border-slate-100 bg-gradient-to-r from-white to-slate-50 px-5 py-5 md:px-6">
+        <div className={`overflow-hidden rounded-[28px] border shadow-[0_24px_60px_rgba(15,23,42,0.08)] ${isDark ? "border-slate-700 bg-slate-900" : "border-[#B0BF00]/15 bg-white"}`}>
+          <div className={`border-b px-5 py-5 md:px-6 ${isDark ? "border-slate-700 bg-slate-900" : "border-slate-200 bg-white"}`}>
             <div className="flex items-center justify-between gap-3">
               <div>
                 <h3 className="text-lg font-semibold text-slate-900">Stock Alerts</h3>
@@ -494,7 +494,7 @@ export default function Dashboard() {
                 {alerts.map((item) => (
                   <div
                     key={item.id}
-                    className={`flex items-center justify-between gap-3 rounded-2xl border px-4 py-3 ${isDark ? "border-slate-700 bg-slate-800/70" : "border-slate-100 bg-slate-50/70"}`}
+                    className={`flex items-center justify-between gap-3 rounded-2xl border px-4 py-3 ${isDark ? "border-slate-700 bg-slate-800" : "border-slate-200 bg-slate-50"}`}
                   >
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium text-slate-700">{item.assetName}</p>
@@ -534,8 +534,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-[28px] border border-[#B0BF00]/15 bg-white/90 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl">
-          <div className="border-b border-slate-100 bg-gradient-to-r from-white to-slate-50 px-5 py-5 md:px-6">
+        <div className={`overflow-hidden rounded-[28px] border shadow-[0_24px_60px_rgba(15,23,42,0.08)] ${isDark ? "border-slate-700 bg-slate-900" : "border-[#B0BF00]/15 bg-white"}`}>
+          <div className={`border-b px-5 py-5 md:px-6 ${isDark ? "border-slate-700 bg-slate-900" : "border-slate-200 bg-white"}`}>
             <div className="flex items-center justify-between gap-3">
               <div>
                 <h3 className="text-lg font-semibold text-slate-900">Type Overview</h3>
@@ -551,7 +551,7 @@ export default function Dashboard() {
               const Icon = categoryIcons[d.name] || Package;
               const pct = totalCategoryUnits > 0 ? Math.round((d.value / totalCategoryUnits) * 100) : 0;
               return (
-                <div key={i} className="rounded-2xl border border-slate-100 bg-slate-50/70 p-4">
+                <div key={i} className={`rounded-2xl border p-4 ${isDark ? "border-slate-700 bg-slate-800" : "border-slate-200 bg-slate-50"}`}>
                   <div className="mb-3 flex items-center gap-3">
                     <div
                       className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl"
@@ -576,8 +576,8 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-[28px] border border-[#B0BF00]/15 bg-white/90 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl">
-        <div className="border-b border-slate-100 bg-gradient-to-r from-white to-slate-50 px-5 py-5 md:px-6">
+      <div className={`overflow-hidden rounded-[28px] border shadow-[0_24px_60px_rgba(15,23,42,0.08)] ${isDark ? "border-slate-700 bg-slate-900" : "border-[#B0BF00]/15 bg-white"}`}>
+          <div className={`border-b px-5 py-5 md:px-6 ${isDark ? "border-slate-700 bg-slate-900" : "border-slate-200 bg-white"}`}>
           <div className="flex items-center justify-between gap-3">
             <div>
               <h3 className="text-lg font-semibold text-slate-900">Recent Activity</h3>
@@ -595,7 +595,7 @@ export default function Dashboard() {
             return (
               <div
                 key={activity.id}
-                className="flex items-start gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-4 transition-all hover:border-[#B0BF00]/30 hover:shadow-sm"
+                className={`flex items-start gap-3 rounded-2xl border p-4 transition-all hover:border-[#B0BF00]/30 hover:shadow-sm ${isDark ? "border-slate-700 bg-slate-800" : "border-slate-200 bg-slate-50"}`}
               >
                 <div className={`${activity.iconBg} ${activity.iconColor} rounded-xl p-2.5 flex-shrink-0`}>
                   <Icon className="h-4 w-4" />

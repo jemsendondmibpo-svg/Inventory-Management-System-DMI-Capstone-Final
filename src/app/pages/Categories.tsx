@@ -170,7 +170,7 @@ export default function Categories() {
           { label: "Total Items In Stock", value: totalInStock, color: "text-green-600" },
           { label: "Low / Out of Stock", value: totalAlerts, color: "text-red-500" },
         ].map((s, i) => (
-          <div key={i} className="bg-white/80 backdrop-blur-xl rounded-xl shadow-[0_4px_20px_rgba(176,191,0,0.08)] border border-[#B0BF00]/20 px-5 py-4 hover:shadow-[0_8px_30px_rgba(176,191,0,0.15)] transition-all duration-300">
+          <div key={i} className="bg-white rounded-xl shadow-[0_4px_20px_rgba(176,191,0,0.08)] border border-[#B0BF00]/20 px-5 py-4 hover:shadow-[0_8px_30px_rgba(176,191,0,0.15)] transition-all duration-300">
             <p className="text-xs text-gray-500">{s.label}</p>
             <p className={`text-2xl font-semibold mt-1 ${s.color}`}>{s.value}</p>
           </div>
@@ -202,7 +202,7 @@ export default function Categories() {
           return (
             <div
               key={cat.id}
-              className="bg-white/80 backdrop-blur-xl rounded-xl shadow-[0_4px_20px_rgba(176,191,0,0.08)] border border-[#B0BF00]/20 p-5 hover:shadow-[0_8px_30px_rgba(176,191,0,0.15)] transition-all duration-300"
+              className="bg-white rounded-xl shadow-[0_4px_20px_rgba(176,191,0,0.08)] border border-[#B0BF00]/20 p-5 hover:shadow-[0_8px_30px_rgba(176,191,0,0.15)] transition-all duration-300"
             >
               {/* Top row */}
               <div className="flex items-start justify-between mb-3">

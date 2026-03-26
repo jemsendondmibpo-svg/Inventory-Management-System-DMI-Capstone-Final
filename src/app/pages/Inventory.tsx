@@ -401,7 +401,7 @@ export default function Inventory() {
           return (
             <div
               key={card.title}
-              className={`overflow-hidden rounded-3xl border border-white/70 bg-gradient-to-br ${card.accent} p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)]`}
+              className={`overflow-hidden rounded-3xl border p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] ${isDark ? "border-slate-700 bg-slate-900" : "border-slate-200 bg-white"}`}
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -412,7 +412,7 @@ export default function Inventory() {
                     {card.value}
                   </p>
                 </div>
-                <div className={`rounded-2xl p-3 shadow-sm ${isDark ? "bg-slate-900/80" : "bg-white/90"}`}>
+                <div className={`rounded-2xl border p-3 shadow-sm ${isDark ? "border-slate-700 bg-slate-800" : "border-slate-200 bg-slate-50"}`}>
                   <Icon className={`h-5 w-5 ${card.iconClass}`} />
                 </div>
               </div>
@@ -423,12 +423,12 @@ export default function Inventory() {
       </div>
 
       {/* Stock List Card */}
-      <div className="overflow-hidden rounded-[28px] border border-[#B0BF00]/15 bg-white/90 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl transition-all duration-300 hover:shadow-[0_26px_70px_rgba(15,23,42,0.12)]">
+      <div className={`overflow-hidden rounded-[28px] border shadow-[0_24px_60px_rgba(15,23,42,0.08)] transition-all duration-300 hover:shadow-[0_26px_70px_rgba(15,23,42,0.12)] ${isDark ? "border-slate-700 bg-slate-900" : "border-[#B0BF00]/15 bg-white"}`}>
         {/* Stock List Header */}
-        <div className="border-b border-slate-100 bg-gradient-to-r from-[#f7fad8] via-white to-[#eef3c2] px-4 py-5 md:px-6 md:py-6">
+        <div className={`border-b px-4 py-5 md:px-6 md:py-6 ${isDark ? "border-slate-700 bg-slate-900" : "border-slate-200 bg-white"}`}>
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#B0BF00]/20 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7f8f00]">
+              <div className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] ${isDark ? "border-slate-700 bg-slate-800 text-[#d8e56b]" : "border-[#B0BF00]/20 bg-slate-50 text-[#7f8f00]"}`}>
                 <Boxes className="h-3.5 w-3.5" />
                 Inventory Module
               </div>
@@ -478,7 +478,7 @@ export default function Inventory() {
 
         {/* Filter Panel */}
         {filterOpen && (
-          <div className="flex flex-wrap items-center gap-3 border-b border-slate-100 bg-slate-50/80 px-4 py-4 md:gap-4 md:px-6">
+          <div className={`flex flex-wrap items-center gap-3 border-b px-4 py-4 md:gap-4 md:px-6 ${isDark ? "border-slate-700 bg-slate-900" : "border-slate-200 bg-slate-50"}`}>
             <div className="flex items-center gap-2">
               <span className="text-xs font-medium text-slate-500">Category:</span>
               <select
@@ -551,7 +551,7 @@ export default function Inventory() {
         <div className="overflow-x-auto">
           <table className="w-full min-w-[900px]">
             <thead>
-              <tr className="border-b border-gray-100">
+                <tr className={`${isDark ? "border-slate-700 bg-slate-900" : "border-gray-200 bg-slate-50"} border-b`}>
                 <th className="text-left px-6 py-3 text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
                   Asset Name
                 </th>
@@ -578,7 +578,7 @@ export default function Inventory() {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className={`divide-y ${isDark ? "divide-slate-700" : "divide-gray-100"}`}>
               {paginated.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="py-12 text-center text-sm text-gray-400 italic">
@@ -589,7 +589,7 @@ export default function Inventory() {
                 paginated.map((asset) => (
                   <tr
                     key={asset.id}
-                    className="hover:bg-gray-50/70 transition-colors"
+                    className={`transition-colors ${isDark ? "hover:bg-slate-800" : "hover:bg-slate-50"}`}
                   >
                     {/* Asset Name */}
                     <td className="px-6 py-3.5">
@@ -705,7 +705,7 @@ export default function Inventory() {
         </div>
 
         {/* Pagination Footer */}
-        <div className="flex items-center justify-between px-6 py-3 border-t border-gray-100">
+        <div className={`flex items-center justify-between px-6 py-3 border-t ${isDark ? "border-slate-700 bg-slate-900" : "border-gray-200 bg-white"}`}>
           <p className="text-xs text-gray-500 font-medium">
             Showing {paginated.length} of {filtered.length} assets
           </p>

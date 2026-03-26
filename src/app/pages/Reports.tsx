@@ -19,7 +19,7 @@ import {
 
 const COLORS = ["#B0BF00", "#1a1d27", "#94a3b8", "#64748b", "#C5D300", "#8BA000"];
 
-const CARD = "overflow-hidden rounded-[28px] border border-[#B0BF00]/15 bg-white/90 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl transition-all duration-300 hover:shadow-[0_26px_70px_rgba(15,23,42,0.12)]";
+const CARD = "overflow-hidden rounded-[28px] border border-[#B0BF00]/15 bg-white shadow-[0_24px_60px_rgba(15,23,42,0.08)] transition-all duration-300 hover:shadow-[0_26px_70px_rgba(15,23,42,0.12)]";
 
 function escapeHtml(text: string) {
   return text
@@ -1150,17 +1150,17 @@ export default function Reports() {
       printWindow.print();
     }, 700);
 
-    toast.success("Branded PDF template opened. Use Save as PDF in the print dialog to download.");
+    toast.success("Use Save as PDF in the print dialog to download.");
   };
 
   return (
     <>
       <div className="space-y-5">
         <div className={CARD}>
-          <div className="bg-gradient-to-r from-[#f7fad8] via-white to-[#eef3c2] px-5 py-6 md:px-6 md:py-7">
+          <div className={`px-5 py-6 md:px-6 md:py-7 ${isDark ? "bg-slate-900" : "bg-white"}`}>
             <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-2xl">
-                <div className="inline-flex items-center gap-2 rounded-full border border-[#B0BF00]/20 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7f8f00]">
+                <div className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] ${isDark ? "border-slate-700 bg-slate-800 text-[#d8e56b]" : "border-[#B0BF00]/20 bg-slate-50 text-[#7f8f00]"}`}>
                   <LayoutDashboard className="h-3.5 w-3.5" />
                   Reports Overview
                 </div>
@@ -1215,7 +1215,7 @@ export default function Reports() {
             return (
               <div
                 key={card.label}
-                className={`overflow-hidden rounded-3xl border border-white/70 bg-gradient-to-br ${card.accent} p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)]`}
+                className={`overflow-hidden rounded-3xl border p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] ${isDark ? "border-slate-700 bg-slate-900" : "border-slate-200 bg-white"}`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -1226,7 +1226,7 @@ export default function Reports() {
                       {card.value}
                     </p>
                   </div>
-                  <div className={`rounded-2xl p-3 shadow-sm ${isDark ? "bg-slate-900/80" : "bg-white/90"}`}>
+                  <div className={`rounded-2xl border p-3 shadow-sm ${isDark ? "border-slate-700 bg-slate-800" : "border-slate-200 bg-slate-50"}`}>
                     <Icon className={`h-5 w-5 ${card.iconClass}`} />
                   </div>
                 </div>
@@ -1348,13 +1348,13 @@ export default function Reports() {
             </div>
             <table className="w-full">
               <thead>
-                <tr className={`border-b ${isDark ? "border-[#314865]" : "border-gray-100"}`}>
+                <tr className={`border-b ${isDark ? "border-[#314865] bg-slate-900" : "border-gray-200 bg-slate-50"}`}>
                   <th className="text-left pb-2 text-[10px] font-semibold uppercase text-slate-400">Asset</th>
                   <th className="text-right pb-2 text-[10px] font-semibold uppercase text-slate-400">Qty</th>
                   <th className="text-right pb-2 text-[10px] font-semibold uppercase text-slate-400">Value</th>
                 </tr>
               </thead>
-              <tbody className={`divide-y ${isDark ? "divide-[#314865]" : "divide-gray-50"}`}>
+              <tbody className={`divide-y ${isDark ? "divide-[#314865]" : "divide-gray-100"}`}>
                 {topAssets.slice(0, 5).map((item, i) => (
                   <tr key={i}>
                     <td className="py-2.5">
@@ -1629,7 +1629,7 @@ export default function Reports() {
             >
               <FileText className="w-8 h-8" />
               <span className="text-sm">PDF Report</span>
-              <span className="text-xs opacity-80">Company-branded PDF template</span>
+              <span className="text-xs opacity-80">PDF format</span>
             </button>
             <button
               onClick={() => handleGenerateReport("csv")}
