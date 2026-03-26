@@ -32,6 +32,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useAssignments } from "../context/AssignmentsContext";
+import { useAuth } from "../context/AuthContext";
 import { useInventory } from "../context/InventoryContext";
 
 const categoryColors: Record<string, string> = {
@@ -68,8 +69,10 @@ type ActivityItem = {
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { assignments, loading: assignmentsLoading } = useAssignments();
   const { inventory, loading: inventoryLoading } = useInventory();
+  const firstName = user?.name?.trim().split(/\s+/)[0] || "there";
 
   if (inventoryLoading || assignmentsLoading) {
     return (
@@ -263,9 +266,15 @@ export default function Dashboard() {
                 <LayoutDashboard className="h-3.5 w-3.5" />
                 Dashboard Overview
               </div>
+              <p className="mt-3 text-sm font-semibold uppercase tracking-[0.2em] text-[#7f8f00]">
+                Welcome back, {firstName}
+              </p>
               <h2 className="mt-3 text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
                 Inventory and Assignment Snapshot
               </h2>
+              <p className="mt-2 text-sm text-slate-600 md:text-base">
+                Here's the latest overview for your {user?.role || "team"} dashboard.
+              </p>
             </div>
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">

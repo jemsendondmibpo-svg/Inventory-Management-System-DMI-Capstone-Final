@@ -6,6 +6,7 @@ import {
 import { useTheme } from "next-themes";
 import { Download, TrendingUp, TrendingDown, Package, AlertTriangle, CheckCircle, Clock, Printer, FileText, File, LayoutDashboard } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "../context/AuthContext";
 import { useInventory } from "../context/InventoryContext";
 import { useAssignments } from "../context/AssignmentsContext";
 import {
@@ -20,12 +21,22 @@ const COLORS = ["#B0BF00", "#1a1d27", "#94a3b8", "#64748b", "#C5D300", "#8BA000"
 
 const CARD = "overflow-hidden rounded-[28px] border border-[#B0BF00]/15 bg-white/90 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl transition-all duration-300 hover:shadow-[0_26px_70px_rgba(15,23,42,0.12)]";
 
+function escapeHtml(text: string) {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export default function Reports() {
   const [reportStartDate, setReportStartDate] = useState("");
   const [reportEndDate, setReportEndDate] = useState("");
-  const [showPrintPreview, setShowPrintPreview] = useState(false);
+  const [showPrintPreview] = useState(false);
   const [showFormatDialog, setShowFormatDialog] = useState(false);
   const printRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuth();
   const { resolvedTheme } = useTheme();
   const { inventory, loading: inventoryLoading } = useInventory();
   const { assignments, loading: assignmentsLoading } = useAssignments();
@@ -83,12 +94,7 @@ export default function Reports() {
     setShowFormatDialog(false);
     
     if (format === "pdf") {
-      // Generate PDF via print
-      setShowPrintPreview(true);
-      setTimeout(() => {
-        window.print();
-      }, 100);
-      toast.success("PDF report ready for download. Please use your browser's print dialog.");
+      handleDownloadPDF();
     } else {
       // Generate CSV
       handleExportCSV();
@@ -496,64 +502,418 @@ export default function Reports() {
     .slice(0, 10);
 
   const currentDate = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  const generatedBy = user ? `${user.name} (${user.role})` : "System User";
+  const selectedDateRange = reportStartDate || reportEndDate
+    ? `${reportStartDate || "Beginning"} to ${reportEndDate || "Present"}`
+    : "All available records";
+
+  const handleDownloadPDF = () => {
+    const printWindow = window.open("", "_blank", "width=1200,height=900");
+
+    if (!printWindow) {
+      toast.error("Unable to open the PDF preview window. Please allow pop-ups and try again.");
+      return;
+    }
+
+    const stockRows = stockByType
+      .map(
+        (item) => `
+          <tr>
+            <td>${escapeHtml(item.name)}</td>
+            <td class="center in-stock">${item.inStock}</td>
+            <td class="center low-stock">${item.lowStock}</td>
+            <td class="center out-stock">${item.outOfStock}</td>
+            <td class="right strong">${item.total}</td>
+          </tr>
+        `
+      )
+      .join("");
+
+    const topAssetRows = topAssets
+      .slice(0, 10)
+      .map(
+        (item) => `
+          <tr>
+            <td>
+              <div class="strong">${escapeHtml(item.name)}</div>
+              <div class="muted mono">${escapeHtml(item.sku)}</div>
+            </td>
+            <td>${escapeHtml(item.category)}</td>
+            <td class="center">${item.qty}</td>
+            <td class="right">PHP ${item.price.toLocaleString()}</td>
+            <td class="right strong">PHP ${item.totalValue.toLocaleString()}</td>
+            <td class="center">${escapeHtml(item.stockStatus)}</td>
+          </tr>
+        `
+      )
+      .join("");
+
+    const lowStockRows = lowStockAlerts.length > 0
+      ? lowStockAlerts
+          .map(
+            (item) => `
+              <tr>
+                <td>
+                  <div class="strong">${escapeHtml(item.name)}</div>
+                  <div class="muted mono">${escapeHtml(item.sku)}</div>
+                </td>
+                <td>${escapeHtml(item.category)}</td>
+                <td class="center">${item.current}</td>
+                <td class="center">${item.minimum}</td>
+                <td class="center">
+                  <span class="badge ${item.current === 0 ? "badge-red" : "badge-amber"}">
+                    ${item.current === 0 ? "Out of Stock" : "Low Stock"}
+                  </span>
+                </td>
+              </tr>
+            `
+          )
+          .join("")
+      : `
+          <tr>
+            <td colspan="5" class="empty">No low stock alerts in the selected range.</td>
+          </tr>
+        `;
+
+    const conditionCards = conditionData
+      .map(
+        (item) => `
+          <div class="condition-card">
+            <span class="condition-dot" style="background:${item.color};"></span>
+            <div class="strong">${escapeHtml(item.name)}</div>
+            <div class="condition-value">${item.value}</div>
+          </div>
+        `
+      )
+      .join("");
+
+    const monthlyRows = monthlyAcquisition
+      .map(
+        (item) => `
+          <tr>
+            <td>${escapeHtml(item.month)}</td>
+            <td class="center">${item.acquired}</td>
+            <td class="center">${item.retired}</td>
+            <td class="center strong">${item.acquired - item.retired}</td>
+          </tr>
+        `
+      )
+      .join("");
+
+    const html = `
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>Digital Minds Inventory Report</title>
+          <style>
+            * { box-sizing: border-box; }
+            body {
+              margin: 0;
+              font-family: Arial, Helvetica, sans-serif;
+              background: #eef2e2;
+              color: #0f172a;
+            }
+            .page {
+              width: 210mm;
+              margin: 0 auto;
+              background: #ffffff;
+              padding: 18mm 16mm;
+            }
+            .hero {
+              display: flex;
+              justify-content: space-between;
+              gap: 16px;
+              align-items: flex-start;
+              border-bottom: 3px solid #b0bf00;
+              padding-bottom: 18px;
+            }
+            .logo {
+              height: 52px;
+              width: auto;
+              display: block;
+              margin-bottom: 10px;
+            }
+            .eyebrow {
+              font-size: 11px;
+              font-weight: 700;
+              letter-spacing: 0.18em;
+              text-transform: uppercase;
+              color: #7f8f00;
+            }
+            h1 {
+              margin: 8px 0 6px;
+              font-size: 28px;
+              line-height: 1.1;
+            }
+            .meta {
+              text-align: right;
+              font-size: 12px;
+              color: #475569;
+              line-height: 1.7;
+            }
+            .summary-grid {
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: 12px;
+              margin: 22px 0;
+            }
+            .summary-card {
+              border: 1px solid #dbe4f0;
+              border-radius: 16px;
+              padding: 14px;
+              background: linear-gradient(180deg, #f8fbeb 0%, #ffffff 100%);
+            }
+            .summary-card h3 {
+              margin: 0 0 8px;
+              font-size: 11px;
+              letter-spacing: 0.12em;
+              text-transform: uppercase;
+              color: #6b7280;
+            }
+            .summary-value {
+              font-size: 28px;
+              font-weight: 700;
+              margin-bottom: 4px;
+            }
+            .summary-copy {
+              font-size: 12px;
+              color: #64748b;
+            }
+            .section {
+              margin-top: 22px;
+            }
+            .section h2 {
+              margin: 0 0 10px;
+              font-size: 17px;
+              border-bottom: 1px solid #dbe4f0;
+              padding-bottom: 8px;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+            }
+            th, td {
+              border-bottom: 1px solid #e7edf5;
+              padding: 10px 8px;
+              font-size: 12px;
+              vertical-align: top;
+            }
+            th {
+              background: #eef4fb;
+              text-align: left;
+              font-size: 11px;
+              text-transform: uppercase;
+              letter-spacing: 0.08em;
+            }
+            .center { text-align: center; }
+            .right { text-align: right; }
+            .strong { font-weight: 700; }
+            .muted { color: #64748b; }
+            .mono { font-family: "Courier New", monospace; font-size: 11px; }
+            .in-stock { color: #047857; }
+            .low-stock { color: #d97706; }
+            .out-stock { color: #dc2626; }
+            .badge {
+              display: inline-block;
+              padding: 4px 8px;
+              border-radius: 999px;
+              font-size: 10px;
+              font-weight: 700;
+              text-transform: uppercase;
+            }
+            .badge-red {
+              background: #fee2e2;
+              color: #b91c1c;
+            }
+            .badge-amber {
+              background: #fef3c7;
+              color: #b45309;
+            }
+            .conditions {
+              display: grid;
+              grid-template-columns: repeat(5, 1fr);
+              gap: 10px;
+            }
+            .condition-card {
+              border: 1px solid #dbe4f0;
+              border-radius: 14px;
+              padding: 12px;
+              text-align: center;
+              background: #f8fafc;
+            }
+            .condition-dot {
+              width: 12px;
+              height: 12px;
+              border-radius: 999px;
+              display: inline-block;
+              margin-bottom: 8px;
+            }
+            .condition-value {
+              margin-top: 6px;
+              font-size: 22px;
+              font-weight: 700;
+            }
+            .empty {
+              text-align: center;
+              color: #64748b;
+              padding: 18px 8px;
+            }
+            .footer {
+              margin-top: 26px;
+              padding-top: 12px;
+              border-top: 2px solid #dbe4f0;
+              display: flex;
+              justify-content: space-between;
+              font-size: 11px;
+              color: #64748b;
+            }
+            @page {
+              size: A4;
+              margin: 12mm;
+            }
+            @media print {
+              body {
+                background: #ffffff;
+              }
+              .page {
+                width: auto;
+                margin: 0;
+                padding: 0;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="page">
+            <section class="hero">
+              <div>
+                <img
+                  class="logo"
+                  src="https://cdn.digitalmindsbpo.com/wp-content/uploads/2022/02/Digital-Minds-BPO-Footer-Logo-768x142.png"
+                  alt="Digital Minds BPO"
+                />
+                <div class="eyebrow">Inventory Management System</div>
+                <h1>Asset Summary Report</h1>
+              </div>
+              <div class="meta">
+                <div><strong>Generated on:</strong> ${escapeHtml(currentDate)}</div>
+                <div><strong>Generated by:</strong> ${escapeHtml(generatedBy)}</div>
+                <div><strong>Date range:</strong> ${escapeHtml(selectedDateRange)}</div>
+              </div>
+            </section>
+
+            <section class="summary-grid">
+              <article class="summary-card">
+                <h3>Total Assets</h3>
+                <div class="summary-value">${totalAssets}</div>
+                <div class="summary-copy">Across all categories in the selected range.</div>
+              </article>
+              <article class="summary-card">
+                <h3>Assets in Stock</h3>
+                <div class="summary-value">${totalInStock}</div>
+                <div class="summary-copy">${totalAssets > 0 ? Math.round((totalInStock / totalAssets) * 100) : 0}% of total inventory is ready for use.</div>
+              </article>
+              <article class="summary-card">
+                <h3>Total Value</h3>
+                <div class="summary-value">PHP ${totalInventoryValue.toLocaleString()}</div>
+                <div class="summary-copy">Current estimated value of tracked assets.</div>
+              </article>
+            </section>
+
+            <section class="section">
+              <h2>Stock Distribution by Category</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th class="center">In Stock</th>
+                    <th class="center">Low Stock</th>
+                    <th class="center">Out of Stock</th>
+                    <th class="right">Total</th>
+                  </tr>
+                </thead>
+                <tbody>${stockRows}</tbody>
+              </table>
+            </section>
+
+            <section class="section">
+              <h2>Top Assets by Value</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Asset</th>
+                    <th>Category</th>
+                    <th class="center">Qty</th>
+                    <th class="right">Unit Price</th>
+                    <th class="right">Total Value</th>
+                    <th class="center">Status</th>
+                  </tr>
+                </thead>
+                <tbody>${topAssetRows}</tbody>
+              </table>
+            </section>
+
+            <section class="section">
+              <h2>Low Stock Alerts</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Asset</th>
+                    <th>Category</th>
+                    <th class="center">Current</th>
+                    <th class="center">Minimum</th>
+                    <th class="center">Status</th>
+                  </tr>
+                </thead>
+                <tbody>${lowStockRows}</tbody>
+              </table>
+            </section>
+
+            <section class="section">
+              <h2>Asset Condition Summary</h2>
+              <div class="conditions">${conditionCards}</div>
+            </section>
+
+            <section class="section">
+              <h2>Monthly Acquisitions vs Retirements</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Month</th>
+                    <th class="center">Acquired</th>
+                    <th class="center">Retired</th>
+                    <th class="center">Net</th>
+                  </tr>
+                </thead>
+                <tbody>${monthlyRows}</tbody>
+              </table>
+            </section>
+
+            <footer class="footer">
+              <span>Digital Minds BPO Services Inc.</span>
+              <span>Inventory Management System Report</span>
+            </footer>
+          </div>
+        </body>
+      </html>
+    `;
+
+    printWindow.document.open();
+    printWindow.document.write(html);
+    printWindow.document.close();
+    printWindow.focus();
+
+    window.setTimeout(() => {
+      printWindow.print();
+    }, 700);
+
+    toast.success("Branded PDF template opened. Use Save as PDF in the print dialog to download.");
+  };
 
   return (
     <>
-      <style>
-        {`
-          .report-light,
-          .report-light[data-report-theme="light"] {
-            background: #ffffff !important;
-            color: #0f172a !important;
-            color-scheme: light;
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-          }
-
-          .report-light,
-          .report-light * {
-            color-scheme: light;
-          }
-
-          .report-light .report-surface,
-          .report-light[data-report-theme="light"] .report-surface {
-            background: #ffffff !important;
-            border-color: #dbe4f0 !important;
-            color: #0f172a !important;
-          }
-
-          .report-light .report-muted,
-          .report-light[data-report-theme="light"] .report-muted {
-            color: #64748b !important;
-          }
-
-          .report-light .report-heading,
-          .report-light[data-report-theme="light"] .report-heading {
-            color: #0f172a !important;
-          }
-
-          @media print {
-            body * {
-              visibility: hidden;
-            }
-            #print-content, #print-content * {
-              visibility: visible;
-              color-scheme: light;
-            }
-            #print-content {
-              position: absolute;
-              left: 0;
-              top: 0;
-              width: 100%;
-              background: #ffffff !important;
-            }
-            @page {
-              margin: 0.5in;
-            }
-          }
-        `}
-      </style>
-
       <div className="space-y-5">
         <div className={CARD}>
           <div className="bg-gradient-to-r from-[#f7fad8] via-white to-[#eef3c2] px-5 py-6 md:px-6 md:py-7">
@@ -1054,7 +1414,7 @@ export default function Reports() {
             >
               <FileText className="w-8 h-8" />
               <span className="text-sm">PDF Report</span>
-              <span className="text-xs opacity-80">Print-ready format</span>
+              <span className="text-xs opacity-80">Company-branded PDF template</span>
             </button>
             <button
               onClick={() => handleGenerateReport("csv")}
