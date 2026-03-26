@@ -340,13 +340,13 @@ export default function Inventory() {
   const getAssetStatusStyle = (status: string) => {
     switch (status) {
       case "Available":
-        return "bg-green-100 text-green-700 border-green-200";
+        return isDark ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/20" : "bg-green-100 text-green-700 border-green-200";
       case "Assigned":
-        return "bg-blue-100 text-blue-700 border-blue-200";
+        return isDark ? "bg-sky-500/15 text-sky-300 border-sky-500/20" : "bg-blue-100 text-blue-700 border-blue-200";
       case "Under Maintenance":
-        return "bg-orange-100 text-orange-700 border-orange-200";
+        return isDark ? "bg-amber-500/15 text-amber-300 border-amber-500/20" : "bg-orange-100 text-orange-700 border-orange-200";
       default:
-        return "bg-gray-100 text-gray-700 border-gray-200";
+        return isDark ? "bg-slate-800 text-slate-200 border-slate-700" : "bg-gray-100 text-gray-700 border-gray-200";
     }
   };
 
@@ -412,7 +412,7 @@ export default function Inventory() {
                     {card.value}
                   </p>
                 </div>
-                <div className="rounded-2xl bg-white/90 p-3 shadow-sm">
+                <div className={`rounded-2xl p-3 shadow-sm ${isDark ? "bg-slate-900/80" : "bg-white/90"}`}>
                   <Icon className={`h-5 w-5 ${card.iconClass}`} />
                 </div>
               </div>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useTheme } from "next-themes";
 import {
   Search,
   Edit,
@@ -32,16 +33,11 @@ import FloorMapHR from "../components/FloorMapHR";
 import { useAuth } from "../context/AuthContext";
 import { canManageAssignments } from "../lib/access";
 
-const STATUS_STYLES: Record<string, string> = {
-  Assigned: "bg-green-100 text-green-700",
-  Available: "bg-blue-100 text-blue-700",
-  "Under Maintenance": "bg-amber-100 text-amber-700",
-};
-
 const ITEMS_PER_PAGE = 6;
 
 export default function Assignments() {
   const navigate = useNavigate();
+  const { resolvedTheme } = useTheme();
   const { user } = useAuth();
   const { assignments, deleteAssignment } = useAssignments();
   const [search, setSearch] = useState("");
@@ -52,6 +48,20 @@ export default function Assignments() {
   const [activeTab, setActiveTab] = useState<"list" | "map">("list");
   const [selectedDepartment, setSelectedDepartment] = useState<"IT Department" | "HR Department">("IT Department");
   const canEditAssignments = user ? canManageAssignments(user.role) : false;
+  const isDark = resolvedTheme === "dark";
+
+  const getStatusStyle = (status: string) => {
+    switch (status) {
+      case "Assigned":
+        return isDark ? "bg-emerald-500/15 text-emerald-300" : "bg-green-100 text-green-700";
+      case "Available":
+        return isDark ? "bg-sky-500/15 text-sky-300" : "bg-blue-100 text-blue-700";
+      case "Under Maintenance":
+        return isDark ? "bg-amber-500/15 text-amber-300" : "bg-amber-100 text-amber-700";
+      default:
+        return isDark ? "bg-slate-700 text-slate-200" : "bg-slate-100 text-slate-700";
+    }
+  };
 
   const filtered = assignments.filter((a) => {
     const q = search.toLowerCase();
@@ -141,7 +151,7 @@ export default function Assignments() {
                     {card.value}
                   </p>
                 </div>
-                <div className="rounded-2xl bg-white/90 p-3 shadow-sm">
+                <div className={`rounded-2xl p-3 shadow-sm ${isDark ? "bg-slate-900/80" : "bg-white/90"}`}>
                   <Icon className={`h-5 w-5 ${card.iconClass}`} />
                 </div>
               </div>
@@ -288,7 +298,7 @@ export default function Assignments() {
                         <span className="text-xs text-gray-500">{assignment.floor}</span>
                       </td>
                       <td className="px-5 py-3.5">
-                        <span className={`rounded px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${STATUS_STYLES[assignment.status]}`}>
+                        <span className={`rounded px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${getStatusStyle(assignment.status)}`}>
                           {assignment.status}
                         </span>
                       </td>
@@ -426,7 +436,7 @@ export default function Assignments() {
               ))}
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-500">Status</span>
-                <span className={`rounded px-2 py-0.5 text-[10px] font-semibold uppercase ${STATUS_STYLES[viewTarget.status]}`}>
+                <span className={`rounded px-2 py-0.5 text-[10px] font-semibold uppercase ${getStatusStyle(viewTarget.status)}`}>
                   {viewTarget.status}
                 </span>
               </div>

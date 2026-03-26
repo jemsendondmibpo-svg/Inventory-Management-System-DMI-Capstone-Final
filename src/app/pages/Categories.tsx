@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTheme } from "next-themes";
 import { Edit, Trash2, Plus, Monitor, Keyboard, Mouse, Headphones, Camera, Cpu, Package } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -60,11 +61,13 @@ const CATEGORY_DESCRIPTIONS: Record<string, string> = {
 };
 
 export default function Categories() {
+  const { resolvedTheme } = useTheme();
   const { inventory, loading } = useInventory();
   const [addOpen, setAddOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<ItemCategory | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<ItemCategory | null>(null);
   const [newCat, setNewCat] = useState({ name: "", description: "" });
+  const isDark = resolvedTheme === "dark";
 
   if (loading) {
     return (
@@ -96,20 +99,41 @@ export default function Categories() {
       acc[cat].totalValue += item.price * item.quantity;
       return acc;
     }, {} as Record<string, { inStock: number; lowStock: number; outOfStock: number; totalValue: number }>)
-  ).map(([name, stats], index) => ({
+  ).map(([name, stats], index) => {
+    const palette = CATEGORY_COLORS[name] || {
+      iconBg: "bg-gray-50",
+      iconColor: "text-gray-500",
+      badgeStyle: "bg-gray-100 text-gray-600",
+    };
+
+    return ({
     id: index + 1,
     name,
     description: CATEGORY_DESCRIPTIONS[name] || "Category description",
     icon: CATEGORY_ICONS[name] || Package,
-    iconBg: CATEGORY_COLORS[name]?.iconBg || "bg-gray-50",
-    iconColor: CATEGORY_COLORS[name]?.iconColor || "text-gray-500",
-    badgeStyle: CATEGORY_COLORS[name]?.badgeStyle || "bg-gray-100 text-gray-600",
+    iconBg: isDark
+      ? palette.iconBg
+          .replace("50", "500/15")
+          .replace("gray-50", "slate-700")
+      : palette.iconBg,
+    iconColor: isDark
+      ? palette.iconColor
+          .replace("500", "300")
+          .replace("gray-500", "text-slate-200")
+      : palette.iconColor,
+    badgeStyle: isDark
+      ? palette.badgeStyle
+          .replace("100", "500/15")
+          .replace("700", "300")
+          .replace("gray-100", "bg-slate-700")
+          .replace("gray-600", "text-slate-200")
+      : palette.badgeStyle,
     inStock: stats.inStock,
     lowStock: stats.lowStock,
     outOfStock: stats.outOfStock,
     totalValue: `₱${stats.totalValue.toLocaleString()}`,
     editable: name === "Extra", // Only Extra category is editable
-  }));
+  })});
 
   const totalItems = categories.reduce((s, c) => s + c.inStock + c.lowStock + c.outOfStock, 0);
   const totalInStock = categories.reduce((s, c) => s + c.inStock, 0);

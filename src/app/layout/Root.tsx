@@ -535,9 +535,11 @@ export default function Root() {
       <AlertDialog open={isLogoutDialogOpen} onOpenChange={setIsLogoutDialogOpen}>
         <AlertDialogContent className="sm:max-w-md rounded-2xl border border-slate-200 bg-white/95 shadow-[0_24px_60px_rgba(15,23,42,0.18)]">
           <AlertDialogHeader>
-            <AlertDialogTitle>Log out of the system?</AlertDialogTitle>
+            <AlertDialogTitle>
+              {`Log out${user?.name ? `, ${user.name.split(/\s+/)[0]}` : ""}?`}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              You will be signed out and need to log in again to continue.
+              Your current session will end, and you will need to sign in again to access your dashboard.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { useTheme } from "next-themes";
 import {
   Package,
   AlertTriangle,
@@ -69,10 +71,21 @@ type ActivityItem = {
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { resolvedTheme } = useTheme();
   const { user } = useAuth();
   const { assignments, loading: assignmentsLoading } = useAssignments();
   const { inventory, loading: inventoryLoading } = useInventory();
   const firstName = user?.name?.trim().split(/\s+/)[0] || "there";
+  const [currentDateTime, setCurrentDateTime] = useState(() => new Date());
+  const isDark = resolvedTheme === "dark";
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setCurrentDateTime(new Date());
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, []);
 
   if (inventoryLoading || assignmentsLoading) {
     return (
@@ -194,8 +207,8 @@ export default function Dashboard() {
           assignedTo: assignment.assignedTo,
           timestamp: formatTimestamp(assignment.dateAssigned),
           icon: UserPlus,
-          iconBg: "bg-green-50",
-          iconColor: "text-green-500",
+          iconBg: isDark ? "bg-emerald-500/15" : "bg-green-50",
+          iconColor: isDark ? "text-emerald-300" : "text-green-500",
           date: new Date(assignment.dateAssigned || 0),
         });
       } else if (assignment.status === "Under Maintenance") {
@@ -206,8 +219,8 @@ export default function Dashboard() {
           assignedTo: assignment.assignedTo,
           timestamp: formatTimestamp(assignment.dateAssigned),
           icon: Wrench,
-          iconBg: "bg-blue-50",
-          iconColor: "text-blue-500",
+          iconBg: isDark ? "bg-sky-500/15" : "bg-blue-50",
+          iconColor: isDark ? "text-sky-300" : "text-blue-500",
           date: new Date(assignment.dateAssigned || 0),
         });
       }
@@ -225,8 +238,22 @@ export default function Dashboard() {
         assignedTo: item.stockStatus === "Out of Stock" ? "Out of stock" : "Low stock alert",
         timestamp: "Recently",
         icon: item.stockStatus === "Out of Stock" ? XCircle : AlertTriangle,
-        iconBg: item.stockStatus === "Out of Stock" ? "bg-red-50" : "bg-amber-50",
-        iconColor: item.stockStatus === "Out of Stock" ? "text-red-500" : "text-amber-500",
+        iconBg:
+          item.stockStatus === "Out of Stock"
+            ? isDark
+              ? "bg-red-500/15"
+              : "bg-red-50"
+            : isDark
+              ? "bg-amber-500/15"
+              : "bg-amber-50",
+        iconColor:
+          item.stockStatus === "Out of Stock"
+            ? isDark
+              ? "text-red-300"
+              : "text-red-500"
+            : isDark
+              ? "text-amber-300"
+              : "text-amber-500",
         date: new Date(),
       });
     });
@@ -269,6 +296,17 @@ export default function Dashboard() {
               <p className="mt-3 text-sm font-semibold uppercase tracking-[0.2em] text-[#7f8f00]">
                 Welcome back, {firstName}
               </p>
+              <p className="mt-2 text-sm font-medium text-slate-500 md:text-base">
+                {currentDateTime.toLocaleString("en-US", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit",
+                  second: "2-digit",
+                })}
+              </p>
               <h2 className="mt-3 text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
                 Inventory and Assignment Snapshot
               </h2>
@@ -278,20 +316,20 @@ export default function Dashboard() {
             </div>
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <div className="rounded-2xl border border-white/70 bg-white/85 px-4 py-3 shadow-sm">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Units</p>
-                <p className="mt-2 text-xl font-bold text-slate-900">{totalAssets}</p>
+              <div className={`rounded-2xl border px-4 py-3 shadow-sm ${isDark ? "border-slate-700/70 bg-slate-900/75" : "border-white/70 bg-white/85"}`}>
+                <p className={`text-[11px] font-semibold uppercase tracking-[0.18em] ${isDark ? "text-slate-400" : "text-slate-500"}`}>Units</p>
+                <p className={`mt-2 text-xl font-bold ${isDark ? "text-slate-100" : "text-slate-900"}`}>{totalAssets}</p>
               </div>
-              <div className="rounded-2xl border border-white/70 bg-white/85 px-4 py-3 shadow-sm">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">In Stock</p>
+              <div className={`rounded-2xl border px-4 py-3 shadow-sm ${isDark ? "border-slate-700/70 bg-slate-900/75" : "border-white/70 bg-white/85"}`}>
+                <p className={`text-[11px] font-semibold uppercase tracking-[0.18em] ${isDark ? "text-slate-400" : "text-slate-500"}`}>In Stock</p>
                 <p className="mt-2 text-xl font-bold text-emerald-600">{inStock}</p>
               </div>
-              <div className="rounded-2xl border border-white/70 bg-white/85 px-4 py-3 shadow-sm">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Assignments</p>
+              <div className={`rounded-2xl border px-4 py-3 shadow-sm ${isDark ? "border-slate-700/70 bg-slate-900/75" : "border-white/70 bg-white/85"}`}>
+                <p className={`text-[11px] font-semibold uppercase tracking-[0.18em] ${isDark ? "text-slate-400" : "text-slate-500"}`}>Assignments</p>
                 <p className="mt-2 text-xl font-bold text-sky-600">{assignments.length}</p>
               </div>
-              <div className="rounded-2xl border border-white/70 bg-white/85 px-4 py-3 shadow-sm">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Alerts</p>
+              <div className={`rounded-2xl border px-4 py-3 shadow-sm ${isDark ? "border-slate-700/70 bg-slate-900/75" : "border-white/70 bg-white/85"}`}>
+                <p className={`text-[11px] font-semibold uppercase tracking-[0.18em] ${isDark ? "text-slate-400" : "text-slate-500"}`}>Alerts</p>
                 <p className="mt-2 text-xl font-bold text-amber-600">{alerts.length}</p>
               </div>
             </div>
@@ -317,13 +355,13 @@ export default function Dashboard() {
                     {card.value}
                   </p>
                 </div>
-                <div className="rounded-2xl bg-white/90 p-3 shadow-sm">
+                <div className={`rounded-2xl p-3 shadow-sm ${isDark ? "bg-slate-900/80" : "bg-white/90"}`}>
                   <Icon className={`h-5 w-5 ${card.iconClass}`} />
                 </div>
               </div>
               <p className="mt-4 text-sm leading-6 text-slate-600">{card.description}</p>
               {card.badge && (
-                <span className="mt-4 inline-flex rounded-full border border-white/80 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-600">
+                <span className={`mt-4 inline-flex rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] ${isDark ? "border-slate-700 bg-slate-900/80 text-slate-300" : "border-white/80 bg-white/80 text-slate-600"}`}>
                   {card.badge}
                 </span>
               )}
@@ -340,7 +378,7 @@ export default function Dashboard() {
                 <h3 className="text-lg font-semibold text-slate-900">Stock by Category</h3>
                 <p className="mt-1 text-sm text-slate-500">See how inventory units are distributed across asset types.</p>
               </div>
-              <div className="rounded-2xl bg-slate-100 p-3 text-slate-500">
+              <div className={`rounded-2xl p-3 ${isDark ? "bg-slate-800 text-slate-300" : "bg-slate-100 text-slate-500"}`}>
                 <Package className="h-5 w-5" />
               </div>
             </div>
@@ -396,7 +434,7 @@ export default function Dashboard() {
                 <h3 className="text-lg font-semibold text-slate-900">Inventory Trend</h3>
                 <p className="mt-1 text-sm text-slate-500">Monthly quantity movement based on actual inventory record dates.</p>
               </div>
-              <div className="rounded-2xl bg-slate-100 p-3 text-slate-500">
+              <div className={`rounded-2xl p-3 ${isDark ? "bg-slate-800 text-slate-300" : "bg-slate-100 text-slate-500"}`}>
                 <Activity className="h-5 w-5" />
               </div>
             </div>
@@ -456,24 +494,34 @@ export default function Dashboard() {
                 {alerts.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-center justify-between gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 px-4 py-3"
+                    className={`flex items-center justify-between gap-3 rounded-2xl border px-4 py-3 ${isDark ? "border-slate-700 bg-slate-800/70" : "border-slate-100 bg-slate-50/70"}`}
                   >
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium text-slate-700">{item.assetName}</p>
                       <p className="truncate font-mono text-[11px] text-slate-400">{item.sku}</p>
                     </div>
                     <div className="flex flex-shrink-0 items-center gap-2">
-                      <span className="hidden text-xs text-slate-500 sm:inline">Qty: {item.quantity}</span>
+                      <span className={`hidden text-xs sm:inline ${isDark ? "text-slate-400" : "text-slate-500"}`}>Qty: {item.quantity}</span>
                       <span
                         className={`flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-semibold uppercase ${
                           item.stockStatus === "Out of Stock"
-                            ? "bg-red-50 text-red-500"
-                            : "bg-amber-50 text-amber-500"
+                            ? isDark
+                              ? "bg-red-500/15 text-red-300"
+                              : "bg-red-50 text-red-500"
+                            : isDark
+                              ? "bg-amber-500/15 text-amber-300"
+                              : "bg-amber-50 text-amber-500"
                         }`}
                       >
                         <span
                           className={`h-1.5 w-1.5 rounded-full ${
-                            item.stockStatus === "Out of Stock" ? "bg-red-400" : "bg-amber-400"
+                            item.stockStatus === "Out of Stock"
+                              ? isDark
+                                ? "bg-red-300"
+                                : "bg-red-400"
+                              : isDark
+                                ? "bg-amber-300"
+                                : "bg-amber-400"
                           }`}
                         />
                         <span className="hidden sm:inline">{item.stockStatus}</span>
@@ -493,7 +541,7 @@ export default function Dashboard() {
                 <h3 className="text-lg font-semibold text-slate-900">Type Overview</h3>
                 <p className="mt-1 text-sm text-slate-500">Compare the unit share of each inventory type.</p>
               </div>
-              <div className="rounded-2xl bg-slate-100 p-3 text-slate-500">
+              <div className={`rounded-2xl p-3 ${isDark ? "bg-slate-800 text-slate-300" : "bg-slate-100 text-slate-500"}`}>
                 <ShieldCheck className="h-5 w-5" />
               </div>
             </div>
@@ -535,7 +583,7 @@ export default function Dashboard() {
               <h3 className="text-lg font-semibold text-slate-900">Recent Activity</h3>
               <p className="mt-1 text-sm text-slate-500">Latest assignment and stock-related updates from the system.</p>
             </div>
-            <div className="flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-xs text-slate-500">
+            <div className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-xs ${isDark ? "bg-slate-800 text-slate-300" : "bg-slate-100 text-slate-500"}`}>
               <Clock className="h-3.5 w-3.5" />
               <span>Last 48 hours</span>
             </div>

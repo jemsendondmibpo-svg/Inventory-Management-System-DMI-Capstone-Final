@@ -1226,7 +1226,7 @@ export default function Reports() {
                       {card.value}
                     </p>
                   </div>
-                  <div className="rounded-2xl bg-white/90 p-3 shadow-sm">
+                  <div className={`rounded-2xl p-3 shadow-sm ${isDark ? "bg-slate-900/80" : "bg-white/90"}`}>
                     <Icon className={`h-5 w-5 ${card.iconClass}`} />
                   </div>
                 </div>
@@ -1373,7 +1373,7 @@ export default function Reports() {
           <div className={`${CARD} p-5`}>
             <div className="flex items-center justify-between mb-4">
               <h3 className={`text-sm font-semibold ${chartTitleClass}`}>Low Stock Alerts</h3>
-              <span className="text-[10px] font-semibold bg-red-50 text-red-500 px-2 py-0.5 rounded-full border border-red-100">
+              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${isDark ? "bg-red-500/15 text-red-300 border-red-500/20" : "bg-red-50 text-red-500 border-red-100"}`}>
                 {lowStockAlerts.length} assets
               </span>
             </div>

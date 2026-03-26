@@ -322,11 +322,11 @@ export default function UserManagement() {
   const getRoleStyle = (role: UserRole) => {
     switch (role) {
       case "Admin":
-        return "bg-purple-100 text-purple-700 border-purple-200";
+        return isDark ? "bg-purple-500/15 text-purple-300 border-purple-500/20" : "bg-purple-100 text-purple-700 border-purple-200";
       case "IT Officers":
-        return "bg-blue-100 text-blue-700 border-blue-200";
+        return isDark ? "bg-blue-500/15 text-blue-300 border-blue-500/20" : "bg-blue-100 text-blue-700 border-blue-200";
       case "HR Officers":
-        return "bg-green-100 text-green-700 border-green-200";
+        return isDark ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/20" : "bg-green-100 text-green-700 border-green-200";
     }
   };
 
@@ -473,10 +473,10 @@ export default function UserManagement() {
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
-          { label: "Total Users", value: stats.total, icon: Users, iconBg: "bg-slate-100 text-slate-600" },
-          { label: "Admins", value: stats.admins, icon: Shield, iconBg: "bg-purple-100 text-purple-600" },
-          { label: "IT Officers", value: stats.itOfficers, icon: UserCog, iconBg: "bg-blue-100 text-blue-600" },
-          { label: "HR Officers", value: stats.hrOfficers, icon: Briefcase, iconBg: "bg-emerald-100 text-emerald-600" },
+          { label: "Total Users", value: stats.total, icon: Users, iconBg: isDark ? "bg-slate-800 text-slate-200" : "bg-slate-100 text-slate-600" },
+          { label: "Admins", value: stats.admins, icon: Shield, iconBg: isDark ? "bg-purple-500/15 text-purple-300" : "bg-purple-100 text-purple-600" },
+          { label: "IT Officers", value: stats.itOfficers, icon: UserCog, iconBg: isDark ? "bg-blue-500/15 text-blue-300" : "bg-blue-100 text-blue-600" },
+          { label: "HR Officers", value: stats.hrOfficers, icon: Briefcase, iconBg: isDark ? "bg-emerald-500/15 text-emerald-300" : "bg-emerald-100 text-emerald-600" },
         ].map((stat, index) => {
           const Icon = stat.icon;
           return (
